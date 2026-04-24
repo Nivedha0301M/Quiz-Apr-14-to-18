@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quiz</title>
+
+<style>
+body { font-family: Arial; margin: 20px; }
+.question { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 10px; }
+.option { display: block; margin: 5px 0; padding: 8px; border: 1px solid #aaa; cursor: pointer; border-radius: 5px; }
+.option:hover { background-color: #f0f0f0; }
+.correct { background-color: #c8f7c5; }
+.wrong { background-color: #f7c5c5; }
+#timer { font-size: 20px; font-weight: bold; }
+</style>
+</head>
+
+<body>
+
+<h2>Quiz</h2>
+<div id="timer">Time Left: 15:00</div>
+<br>
+
+<div id="quiz"></div>
+
+<br>
+<button onclick="submitQuiz()">Submit</button>
+
+<h3 id="result"></h3>
+
+<script>
+
+const questions = [
+
+{q:`Vice President C. P. Radhakrishnan released an updated edition of the Constitution of India in Sindhi language on April 10, 2026. Which combination correctly represents the scripts used across editions?`, options:["Gurmukhi (1st), Persian (2nd)","Devanagari (1st), Persian (2nd)","Roman (1st), Devanagari (2nd)","Persian (1st), Devanagari (2nd)"], answer:1},
+
+{q:`The updated Sindhi Constitution was released on which occasion and at which venue?`, options:["Constitution Day at Rashtrapati Bhavan","Sindhi Bhasha Diwas at Uparashtrapati Bhawan","National Integration Day at Parliament House","Hindi Diwas at Vigyan Bhavan"], answer:1},
+
+{q:`Which of the following languages was NOT among the translations of the Constitution mentioned in the release?`, options:["Dogri","Bodo","Konkani","Santhali"], answer:2},
+
+{q:`The Doordarshan–ICCR MoU aims to promote Indian culture globally. What is the duration of this agreement?`, options:["2 years","3 years","5 years","10 years"], answer:1},
+
+{q:`Who signed the MoU between Doordarshan and ICCR?`, options:["Prasar Bharati CEO & ICCR Chairman","DG Doordarshan & DG ICCR","I&B Minister & External Affairs Minister","Secretary I&B & Secretary Culture"], answer:1},
+
+{q:`The Indo-Taiwan Industrial Park MoU in Gujarat is primarily aimed at strengthening which sector?`, options:["Textile exports","Semiconductor and electronics manufacturing","Tourism infrastructure","Agro-processing"], answer:1},
+
+{q:`Which entity partnered with Gujarat’s Science and Technology Department for the Indo-Taiwan industrial project?`, options:["Foxconn India","Allegiance International Company Limited","TSMC","Pegatron"], answer:1},
+
+{q:`The HUDCO–NBCC MoUs focus on redevelopment and monetisation. Which location is associated with redevelopment?`, options:["Connaught Place","Pragati Maidan","August Kranti Bhawan","India Gate Complex"], answer:2},
+
+{q:`The India–Uzbekistan Exercise DUSTLIK 2026 was conducted in which location?`, options:["Tashkent Military Base","Samarkand Field Range","Gurumsaray Field Training Area","Bukhara Combat Zone"], answer:2},
+
+{q:`What was unique about the validation phase of Exercise DUSTLIK 2026?`, options:["Drone warfare simulation","72-hour endurance drill","48-hour intensive validation phase","Cyber warfare testing"], answer:2},
+
+{q:`India and Myanmar signed an MoU for constructing a school in Nay Pyi Taw under which policy framework?`, options:["Act East Policy","Look West Policy","Neighbourhood First Policy","Indo-Pacific Strategy"], answer:2},
+
+{q:`RBI’s Utkarsh 2029 strategy includes how many deliverables across its pillars?`, options:["36","42","49","60"], answer:2},
+
+{q:`Project Sa-Mudra under RBI’s Utkarsh 2029 is related to:`, options:["Digital payments expansion","Currency management modernization","Banking fraud detection","Financial literacy"], answer:1},
+
+{q:`SEBI’s SUPCOMS 2.1 platform primarily replaces:`, options:["Blockchain reporting","Email-based communication","Physical filings","Stock exchange reporting"], answer:1},
+
+{q:`The Cyber-Sec Audit Compliance (C-SAC) platform helps in:`, options:["Fraud investigation","Cyber audit analysis","Trading regulation","IPO approvals"], answer:1},
+
+{q:`Paytm’s biometric UPI feature aligns with RBI’s new rules introduced on:`, options:["Jan 1, 2026","March 31, 2026","April 1, 2026","April 15, 2026"], answer:2},
+
+{q:`The maximum limit for cardless ATM withdrawal via Paytm is:`, options:["₹5,000","₹7,500","₹10,000","₹20,000"], answer:2},
+
+{q:`CARI Bengaluru became the first CCRAS institute to receive which accreditation?`, options:["ISO 9001:2015","ISO 14001","ISO 15189:2022","NABH Accreditation"], answer:2},
+
+{q:`Ismail Omar Guelleh was re-elected President of Djibouti with approximately what vote share?`, options:["89%","92%","97.81%","85%"], answer:2},
+
+{q:`NASA’s Artemis II mission completed a unique milestone involving:`, options:["Mars docking","Satellite servicing","Ship-to-ship call with ISS","Lunar landing"], answer:2},
+
+{q:`The Orion capsule used in Artemis II mission was named:`, options:["Discovery","Endeavour","Integrity","Horizon"], answer:2},
+
+{q:`Which country topped the 2026 Asian Wrestling Championships?`, options:["Japan","China","Iran","Kazakhstan"], answer:2},
+
+{q:`India’s medal tally in Asian Wrestling Championships 2026 included:`, options:["1 Gold","2 Gold","3 Gold","5 Gold"], answer:2},
+
+{q:`Asian Boxing Championships 2026 was held in:`, options:["Kazakhstan","Uzbekistan","Mongolia","China"], answer:1},
+
+{q:`Asha Bhosle, who passed away in 2026, received Padma Vibhushan in:`, options:["2005","2008","2010","2012"], answer:1},
+
+{q:`Colonel Sonam Wangchuk, MVC awardee, was known as:`, options:["Tiger of Kargil","Lion of Ladakh","Hero of Siachen","Guardian of Himalayas"], answer:1},
+
+{q:`National Safe Motherhood Day is observed on:`, options:["April 10","April 11","April 12","April 14"], answer:1},
+
+{q:`World Parkinson’s Day commemorates:`, options:["Discovery of dopamine","Birth of Dr. James Parkinson","WHO declaration","First treatment discovery"], answer:1},
+
+{q:`Delhi–Dehradun Economic Corridor is approximately:`, options:["150 km","180 km","213 km","250 km"], answer:2},
+
+{q:`Startup India Fund of Funds 2.0 has a corpus of:`, options:["₹5,000 crore","₹7,500 crore","₹10,000 crore","₹15,000 crore"], answer:2},
+
+{q:`Which institution acts as the implementation agency for Startup India FoF 2.0?`, options:["RBI","SEBI","SIDBI","NABARD"], answer:2},
+
+{q:`Amaravati Quantum Reference Facility operates near:`, options:["0°C","-100°C","Absolute zero (~ -273°C)","-50°C"], answer:2},
+
+{q:`NITI Aayog’s R&D reports focus on which key pillars?`, options:["Trade, export, import","Funding, governance, regulation, translation","Defence, space, AI","Infrastructure, health, education"], answer:1},
+
+{q:`Department of Posts partnered with which institution to preserve democratic heritage?`, options:["National Archives","PMML","IGNCA","Sahitya Akademi"], answer:1},
+
+{q:`The MoL&E partnership with Porter aims to generate how many opportunities annually?`, options:["3 lakh","5 lakh","6 lakh","10 lakh"], answer:2},
+
+{q:`Radio Sikkim Sundari operates at which frequency?`, options:["88.8 FM","90.4 FM","88.4 FM","91.2 FM"], answer:2},
+
+{q:`The F404 engine depot facility agreement was signed between IAF and:`, options:["Boeing","Airbus","GE Aerospace","Lockheed Martin"], answer:2},
+
+{q:`Indian Ocean Conference 2026 was held in:`, options:["Maldives","Seychelles","Mauritius","Sri Lanka"], answer:2},
+
+{q:`The theme of IOC 2026 was:`, options:["Blue Economy Growth","Collective Stewardship for Indian Ocean Governance","Maritime Security First","Indo-Pacific Cooperation"], answer:1},
+
+{q:`UPI transactions in 2025 reached approximately:`, options:["200 billion","210 billion","228.5 billion","250 billion"], answer:2},
+
+{q:`Visa and HDFC Bank launched a credit card themed on:`, options:["Olympics 2026","ICC Cricket World Cup","FIFA World Cup 2026","Asian Games"], answer:2},
+
+{q:`Nizar Amedi became President of which country?`, options:["Syria","Iraq","Iran","Lebanon"], answer:1},
+
+{q:`Cyrtodactylus raimonaensis belongs to which category?`, options:["Snake","Frog","Gecko","Lizard (general)"], answer:2},
+
+{q:`Badminton Asia Championships 2026 was held in:`, options:["Tokyo","Seoul","Ningbo","Bangkok"], answer:2},
+
+{q:`Ayush Shetty achieved:`, options:["Gold medal","Bronze medal","Silver medal","Quarterfinal finish"], answer:1},
+
+{q:`International Day of Human Space Flight marks:`, options:["Moon landing","First human spaceflight","Mars mission","Space station launch"], answer:1},
+
+{q:`Vietnam’s Vingroup signed an MoU with which Indian state?`, options:["Gujarat","Tamil Nadu","Maharashtra","Karnataka"], answer:2},
+
+{q:`Urban Challenge Fund has total central assistance of:`, options:["₹50,000 crore","₹75,000 crore","₹1 lakh crore","₹1.5 lakh crore"], answer:2},
+
+{q:`Patent filings in India in FY26 reached approximately:`, options:["1.1 lakh","1.25 lakh","1.43 lakh","1.6 lakh"], answer:2},
+
+{q:`India ranks globally in patent filings as per WIPO:`, options:["4th","5th","6th","7th"], answer:1}
+
+{q:`The MoU signed between the Department of Posts (DoP) and the Prime Ministers’ Museum and Library (PMML) was primarily aimed at:`, options:["Digitising parliamentary debates since independence","Preserving and showcasing India’s democratic heritage through philately","Establishing postal museums across all states","Launching a unified postal banking platform"], answer:1},
+
+{q:`The philatelic exhibition titled ‘Ek Bharat, Shreshtha Bharat’ released under the DoP–PMML collaboration focused on:`, options:["Freedom fighters’ biographies","India’s unity and democracy through postage stamps","Evolution of Indian postal services","Digital communication transformation"], answer:1},
+
+{q:`The MoUs signed by the Ministry of Labour & Employment (MoL&E) with Porter and Gigin Technologies aim to:`, options:["Replace traditional employment exchanges","Boost job opportunities and enhance digital job matching on NCS portal","Create AI-based industrial clusters","Develop export-oriented gig platforms"], answer:1},
+
+{q:`Under the MoL&E–Porter collaboration, the annual job generation target is approximately:`, options:["2 lakh opportunities","4 lakh opportunities","6 lakh opportunities","10 lakh opportunities"], answer:2},
+
+{q:`Gigin Technologies contributes to the MoL&E initiative by:`, options:["Blockchain-based employment verification","AI-powered ‘Verification Intelligence’ for gig jobs","Satellite-based labour tracking","Biometric-only workforce authentication"], answer:1},
+
+{q:`‘Radio Sikkim Sundari’ launched by the Indian Army operates on which frequency band?`, options:["90.2 FM","88.4 FM","91.6 FM","87.5 FM"], answer:1},
+
+{q:`The ‘Radio Sikkim Sundari’ initiative is part of which programme?`, options:["Digital India Mission","Vibrant Villages Programme (VVP)","Border Area Development Programme","Smart Villages Initiative"], answer:1},
+
+{q:`The agreement between the Indian Air Force (IAF) and GE Aerospace focuses on:`, options:["Manufacturing fighter aircraft in India","Setting up depot facility for F404-IN20 engines","Developing indigenous drones","Exporting aviation technology"], answer:1},
+
+{q:`Under the IAF–GE Aerospace agreement, who will operate and maintain the facility?`, options:["GE Aerospace","DRDO","Indian Air Force","HAL"], answer:2},
+
+{q:`The 9th Indian Ocean Conference (IOC 2026) was held in:`, options:["Colombo","Port Louis","Jakarta","Male"], answer:1},
+
+{q:`The theme of the 9th Indian Ocean Conference was:`, options:["Blue Economy and Maritime Security","Collective Stewardship for Indian Ocean Governance","Sustainable Ocean Trade","Maritime Connectivity for Growth"], answer:1},
+
+{q:`According to the Worldline Report 2025, total UPI transactions processed in 2025 were approximately:`, options:["150 billion","200 billion","228.5 billion","300 billion"], answer:2},
+
+{q:`The total value of UPI transactions in 2025 stood at:`, options:["₹199 trillion","₹250 trillion","₹299.74 trillion","₹350 trillion"], answer:2},
+
+{q:`The ‘FIFA World Cup 2026 Pixel Credit Card’ was launched through which platform?`, options:["BHIM App","PayZapp","Google Pay","PhonePe"], answer:1},
+
+{q:`The ‘Spend & Win’ campaign linked with the Pixel Credit Card offers:`, options:["Cryptocurrency rewards","Travel packages and FIFA tickets","Government bond investments","Insurance benefits only"], answer:1},
+
+{q:`Nizar Mohammed Saeed Amedi became the President of:`, options:["Syria","Iraq","Jordan","Lebanon"], answer:1},
+
+{q:`The new bent-toed gecko species ‘Cyrtodactylus raimonaensis’ was discovered near:`, options:["Kaziranga NP","Raimona NP","Manas NP","Dibru-Saikhowa NP"], answer:1},
+
+{q:`The discovery of ‘Cyrtodactylus raimonaensis’ was published in:`, options:["Nature","Science","Zootaxa","Current Biology"], answer:2},
+
+{q:`The 43rd Badminton Asia Championships 2026 were held in:`, options:["Beijing","Ningbo","Shanghai","Seoul"], answer:1},
+
+{q:`India’s Ayush Shetty achieved which milestone in Badminton Asia Championships 2026?`, options:["First Indian gold in 30 years","First Indian to win mixed doubles","Men’s singles silver after 61 years","Youngest champion in history"], answer:2},
+
+{q:`International Day of Human Space Flight commemorates:`, options:["First satellite launch","First moon landing","First human spaceflight by Yuri Gagarin","First Mars mission"], answer:2},
+
+{q:`International Day for Street Children was first observed in:`, options:["2005","2010","2011","2015"], answer:2},
+
+{q:`The MoU between Vingroup and Maharashtra involves investment of:`, options:["USD 4 billion","USD 5 billion","USD 6.5 billion","USD 8 billion"], answer:1},
+
+{q:`Under the Urban Challenge Fund, total central assistance announced is:`, options:["₹50,000 crore","₹75,000 crore","₹1 lakh crore","₹1.5 lakh crore"], answer:2},
+
+{q:`Patent filings in India in FY26 reached approximately:`, options:["1 lakh","1.2 lakh","1.43 lakh","1.8 lakh"], answer:2},
+
+{q:`India’s global ranking in patent filings (WIPO) is:`, options:["4th","5th","6th","7th"], answer:1},
+
+{q:`‘Samudra Sahas’ expedition launched by Indian Army covers approximately:`, options:["300 nautical miles","400 nautical miles","520 nautical miles","700 nautical miles"], answer:2},
+
+{q:`The BE-JTO project supported by TDB focuses on:`, options:["Solar aircraft","Hybrid propulsion-based jump take-off system","Electric ships","Autonomous drones"], answer:1},
+
+{q:`The DoT–SEBI MoU aims to:`, options:["Expand telecom infrastructure","Prevent misuse of telecom resources in financial fraud","Launch digital securities","Create telecom banks"], answer:1},
+
+{q:`TIME 100 Most Influential People 2026 includes how many Indians?`, options:["2","3","5","7"], answer:1},
+
+{q:`India and Germany celebrated how many years of diplomatic relations?`, options:["50","60","75","100"], answer:2},
+
+{q:`The PRAVAAH portal relates to:`, options:["Patent filing","NBFC branch authorisation","GST compliance","Export licensing"], answer:1},
+
+{q:`LIC’s ‘Super Sales Saathi’ app is designed for:`, options:["Policyholders","Regulators","Sales intermediaries","Bank officials"], answer:2},
+
+{q:`Primary Dealers (PDs) primarily operate in:`, options:["Equity markets","Forex markets","Government securities market","Commodity markets"], answer:2},
+
+{q:`Razorpay’s partnership with OpenAI focuses on:`, options:["Defence AI","Payment integration in AI-built apps","Cryptocurrency exchanges","Cloud computing"], answer:1},
+
+{q:`India’s trade deficit with China in FY26 stood at approximately:`, options:["USD 90 billion","USD 100 billion","USD 112 billion","USD 130 billion"], answer:2},
+
+{q:`Samrat Choudhary became the Chief Minister of:`, options:["Jharkhand","Bihar","Uttar Pradesh","Madhya Pradesh"], answer:1},
+
+{q:`Infosys appointed Carlos Alcaraz as:`, options:["Technical Advisor","Brand Ambassador","Board Member","Investor"], answer:1},
+
+{q:`At ISSF World Cup 2026, India won gold in:`, options:["Rifle shooting","Mixed team pistol","Trap shooting","Individual pistol"], answer:1},
+
+{q:`R. Vaishali won the Women’s Candidates Tournament held in:`, options:["Spain","Cyprus","Germany","Russia"], answer:1},
+
+{q:`Siachen Day commemorates:`, options:["Kargil War","Operation Meghdoot","Indo-China War","Operation Vijay"], answer:1},
+
+{q:`The Jallianwala Bagh massacre occurred in:`, options:["1915","1919","1921","1930"], answer:1},
+
+{q:`The APSDMA–NRSC MoU focuses on:`, options:["Flood prediction","Earthquake monitoring","Lightning forecasting","Cyclone tracking"], answer:2},
+
+{q:`Startup India Fund of Funds 2.0 has an outlay of:`, options:["₹5,000 crore","₹7,500 crore","₹10,000 crore","₹15,000 crore"], answer:2},
+
+{q:`The Amaravati Quantum Reference Facility operates near:`, options:["−100°C","−150°C","Absolute zero (~−273°C)","−50°C"], answer:2},
+
+{q:`NITI Aayog’s R&D reports focus on:`, options:["Defence innovation only","Funding, governance, and research translation","Export promotion","Agricultural reforms"], answer:1},
+
+{q:`The MoU for school construction in Nay Pyi Taw reflects India’s:`, options:["Act East Policy","Neighbourhood First Policy","Look West Policy","Indo-Pacific Strategy"], answer:1},
+
+{q:`‘Utkarsh 2029’ strategy includes how many deliverables?`, options:["30","40","49","60"], answer:2},
+
+{q:`Project Sa-Mudra relates to:`, options:["Maritime trade","Currency management modernisation","Fisheries development","Shipping logistics"], answer:1},
+
+{q:`CARI Bengaluru received ISO 15189:2022 accreditation in:`, options:["Pharmacology","Microbiology","Biochemistry and Haematology","Ayurveda therapy"], answer:2}
+
+{q:`The updated edition of the Constitution of India released in Sindhi language includes which scripts?`, options:["Only Devanagari","Only Perso-Arabic","Both Devanagari and Persian scripts across editions","Roman and Devanagari scripts"], answer:2},
+
+{q:`The release of the Sindhi version of the Constitution coincided with:`, options:["Republic Day","Constitution Day","Sindhi Bhasha Diwas","International Mother Language Day"], answer:2},
+
+{q:`The translation initiative of the Constitution includes languages such as:`, options:["Only classical languages","Bodo, Dogri, Santhali, Tamil, Gujarati, and Nepali","Only Scheduled Languages from South India","Only tribal languages"], answer:1},
+
+{q:`The Doordarshan–ICCR MoU primarily aims to:`, options:["Increase advertisement revenue","Promote Indian culture globally via broadcasting collaboration","Replace private media networks","Launch OTT platforms"], answer:1},
+
+{q:`The Doordarshan–ICCR agreement is valid for:`, options:["1 year","2 years","3 years","5 years"], answer:2},
+
+{q:`The Indo-Taiwan Industrial Park MoU in Gujarat focuses on:`, options:["Textile manufacturing","Semiconductor and electronics ecosystem","Agriculture exports","Tourism infrastructure"], answer:1},
+
+{q:`The Gujarat Industrial Park MoU was signed with which entity?`, options:["Foxconn","Allegiance International Company Limited","TSMC","Pegatron"], answer:1},
+
+{q:`The redevelopment project under HUDCO–NBCC MoU involves which location?`, options:["Connaught Place","August Kranti Bhawan, Bhikaji Cama Place","India Gate Complex","Pragati Maidan"], answer:1},
+
+{q:`The India–Uzbekistan joint exercise ‘DUSTLIK 2026’ is its:`, options:["5th edition","6th edition","7th edition","8th edition"], answer:1},
+
+{q:`The validation phase of Exercise DUSTLIK 2026 includes:`, options:["24-hour simulation","36-hour exercise","48-hour intensive phase","72-hour endurance phase"], answer:2},
+
+{q:`The MoU between India and Myanmar for school construction focuses on:`, options:["Secondary education only","Higher education infrastructure","Early childhood development environments","Vocational training"], answer:2},
+
+{q:`‘Utkarsh 2029’ aims to position RBI as:`, options:["Digital-only bank","Global investment bank","World-class full-service central bank","Regional monetary authority"], answer:2},
+
+{q:`SUPCOMS 2.1 launched by SEBI replaces:`, options:["Phone-based grievance system","Email-based communication","Physical documentation only","Manual trading platforms"], answer:1},
+
+{q:`The Cyber-Sec Audit Compliance (C-SAC) platform enables:`, options:["Manual audit submissions","Automated analysis of cyber audit reports","Blockchain-based stock trading","Digital currency issuance"], answer:1},
+
+{q:`Paytm’s biometric UPI feature eliminates the need for:`, options:["OTP verification","UPI PIN entry","Bank account linking","SIM verification"], answer:1},
+
+{q:`Cardless ATM withdrawal limits introduced with Paytm are:`, options:["₹2,000","₹5,000","₹10,000","₹20,000"], answer:2},
+
+{q:`ISO 15189:2022 accreditation relates to:`, options:["Manufacturing standards","Medical laboratory quality and competence","IT security compliance","Environmental sustainability"], answer:1},
+
+{q:`Ismaïl Omar Guelleh secured what percentage of votes in Djibouti elections?`, options:["85%","90%","97.81%","99%"], answer:2},
+
+{q:`NASA’s Artemis II mission lasted approximately:`, options:["5 days","7 days","10 days","15 days"], answer:1},
+
+{q:`The Orion capsule used in Artemis II mission was named:`, options:["Discovery","Integrity","Endeavour","Odyssey"], answer:2},
+
+{q:`At Asian Wrestling Championships 2026, India secured:`, options:["3rd position","4th position","5th position","6th position"], answer:1},
+
+{q:`Kazakhstan topped the Asian Boxing Championships 2026 with:`, options:["10 medals","12 medals","15 medals","18 medals"], answer:2},
+
+{q:`Asha Bhosle was awarded Padma Vibhushan in:`, options:["2005","2008","2010","2012"], answer:1},
+
+{q:`Col. Sonam Wangchuk received the Mahavir Chakra for:`, options:["1971 War","Kargil War","1965 War","UN Peacekeeping"], answer:1},
+
+{q:`National Safe Motherhood Day commemorates:`, options:["Indira Gandhi","Sarojini Naidu","Kasturba Gandhi","Annie Besant"], answer:2},
+
+{q:`World Parkinson’s Day marks the birth anniversary of:`, options:["Louis Pasteur","Edward Jenner","James Parkinson","Robert Koch"], answer:2},
+
+{q:`The Delhi–Dehradun Economic Corridor length is approximately:`, options:["150 km","180 km","213 km","250 km"], answer:2},
+
+{q:`Startup India Fund of Funds 2.0 is implemented by:`, options:["NABARD","SIDBI","SEBI","RBI"], answer:1},
+
+{q:`The Amaravati Quantum Reference Facility operates at:`, options:["High pressure","Ultra-high temperature","Near absolute zero","Room temperature"], answer:2},
+
+{q:`The NITI Aayog R&D reports emphasize:`, options:["Defence exports","Funding, governance, regulatory frameworks","Trade agreements","Industrial licensing"], answer:1},
+
+{q:`The DoP–PMML collaboration marked which foundation day of PMML?`, options:["2nd","3rd","4th","5th"], answer:2},
+
+{q:`‘Radio Sikkim Sundari’ is significant as:`, options:["First private radio station","First border village community radio station in Sikkim","First digital radio in India","First satellite radio"], answer:1},
+
+{q:`GE Aerospace plans to deliver how many engines to India by December 2026?`, options:["10","15","20","25"], answer:2},
+
+{q:`The Indian Ocean Conference is organised by:`, options:["MEA","India Foundation","NITI Aayog","UNDP"], answer:1},
+
+{q:`UPI QR codes expanded to approximately:`, options:["500 million","600 million","731.38 million","900 million"], answer:2},
+
+{q:`The FIFA Pixel Credit Card primarily targets:`, options:["Rural users","Corporate banking","Digital payments ecosystem","Government employees"], answer:2},
+
+{q:`India’s trade with China in FY26 totaled around:`, options:["USD 120 billion","USD 140 billion","USD 151.1 billion","USD 170 billion"], answer:2},
+
+{q:`Infosys previously partnered with which tennis legend?`, options:["Roger Federer","Rafael Nadal","Novak Djokovic","Andy Murray"], answer:1},
+
+{q:`The ISSF World Cup 2026 was held in:`, options:["Madrid","Barcelona","Granada","Valencia"], answer:2},
+
+{q:`R. Vaishali defeated which player to win the Candidates Tournament?`, options:["Hou Yifan","Kateryna Lagno","Alexandra Kosteniuk","Anna Muzychuk"], answer:1},
+
+{q:`Operation Meghdoot was launched in:`, options:["1980","1982","1984","1986"], answer:2},
+
+{q:`The APSDMA–NRSC collaboration was signed in:`, options:["Hyderabad","Amaravati","Vijayawada","Visakhapatnam"], answer:1},
+
+{q:`The Venture Capital Investment Committee (VCIC) is part of:`, options:["Startup India FoF 2.0","Digital India","Make in India","Skill India"], answer:1},
+
+{q:`The Amaravati Quantum Facility includes Amaravati 1S located at:`, options:["IIT Hyderabad","SRM University, Neerukonda","IISc Bengaluru","DRDO Lab"], answer:1},
+
+{q:`The MoU between Odisha and NCCR relates to:`, options:["Coastal tourism","Marine Spatial Planning","Port development","Fisheries expansion"], answer:1},
+
+{q:`World Chagas Disease Day was first observed in:`, options:["2015","2018","2020","2022"], answer:2},
+
+{q:`National Fire Service Day commemorates:`, options:["Industrial fire accident","Bombay Dock Explosion 1944","Delhi fire tragedy","Surat fire incident"], answer:1},
+
+{q:`‘NeophyteID’ supports which languages?`, options:["Hindi & English","Tamil & English","Malayalam & English","Telugu & English"], answer:1},
+
+{q:`According to Bloomberg Billionaires Index 2026, Elon Musk’s net worth is approximately:`, options:["USD 500 billion","USD 600 billion","USD 656 billion","USD 700 billion"], answer:2},
+
+{q:`ISRO–ATREE project aims to map approximately what percentage of India’s land?`, options:["5%","8%","10%","15%"], answer:1}
+];
+
+// =======================
+// QUIZ LOGIC
+// =======================
+
+let score = 0;
+let answered = new Array(questions.length).fill(false);
+
+function loadQuiz() {
+    const quizDiv = document.getElementById("quiz");
+
+    questions.forEach((item, index) => {
+        const qDiv = document.createElement("div");
+        qDiv.classList.add("question");
+
+        qDiv.innerHTML = `<b>Q${index+1}. ${item.q}</b>`;
+
+        item.options.forEach((opt, i) => {
+            const optBtn = document.createElement("div");
+            optBtn.classList.add("option");
+            optBtn.innerText = opt;
+
+            optBtn.onclick = () => checkAnswer(index, i, optBtn, qDiv);
+
+            qDiv.appendChild(optBtn);
+        });
+
+        quizDiv.appendChild(qDiv);
+    });
+}
+
+function checkAnswer(qIndex, selected, element, qDiv) {
+
+    if (answered[qIndex]) return; // 🔒 Restriction
+
+    answered[qIndex] = true;
+
+    const correct = questions[qIndex].answer;
+    const options = qDiv.querySelectorAll(".option");
+
+    if (selected === correct) {
+        element.classList.add("correct");
+        element.innerHTML += " ✔ Correct";
+        score += 1;
+    } else {
+        element.classList.add("wrong");
+        element.innerHTML += " ❌ Wrong";
+        score -= 0.25;
+
+        // show correct answer
+        options[correct].classList.add("correct");
+        options[correct].innerHTML += " ✔ Correct Answer";
+    }
+
+    // disable all options
+    options.forEach(opt => opt.style.pointerEvents = "none");
+}
+
+let quizSubmitted = false;
+
+function submitQuiz() {
+    if (quizSubmitted) return;
+
+    quizSubmitted = true;
+    clearInterval(timer); // stop timer
+
+    document.getElementById("result").innerText =
+        "Final Score: " + score.toFixed(2);
+
+    // disable all options
+    document.querySelectorAll(".option").forEach(opt => {
+        opt.style.pointerEvents = "none";
+    });
+
+}
+
+// =======================
+// TIMER (15 mins)
+// =======================
+
+let time = 3600; // 60 min
+
+const timer = setInterval(() => {
+    let min = Math.floor(time / 60);
+    let sec = time % 60;
+
+    document.getElementById("timer").innerText =
+        `Time Left: ${min}:${sec < 10 ? '0'+sec : sec}`;
+
+    time--;
+
+    if (time <= 0) {
+        clearInterval(timer);
+        alert("Time's up! Auto submitting...");
+        submitQuiz();
+    }
+
+}, 1000);
+
+// =======================
+
+loadQuiz();
+
+</script>
+
+</body>
+</html>
